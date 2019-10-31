@@ -1,0 +1,14 @@
+{
+  "name": "tester",
+  "author": "Nick Saenz",
+  "dependencies": {
+    "typescript": "*",
+    "@types/node": "*"
+  },
+  "scripts": {
+    "testRemoteRemoval": "tsc && node remoteFunctionRemover.js ./test.ts"
+  },
+  "engines": {
+    "node": "12.13.0"
+  }
+}

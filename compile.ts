@@ -57,6 +57,27 @@ export default function transformer(program: ts.Program): ts.TransformerFactory<
 }
 
 function visitNodeAndChildren(node: ts.SourceFile, program: ts.Program, context: ts.TransformationContext): ts.SourceFile {
-    console.log("!!!", node.getFullText());
+    findRemotes(node);
     return node;
+
+    // action for each node in the ast
+    function findRemotes(node: ts.Node) {
+        // filter by what kind of nodes we come across
+        switch (node.kind) {
+            // handle decorator case
+            case ts.SyntaxKind.Decorator:
+                // check to see if we have a remote function match
+                if(node.getFullText().match('remote')) {
+                    // we want to access the method body, which is the decorators sibling.
+                    // go up to parent, then back down to the `body` (actual function code)
+                    let methodDeclaration = (node.parent as ts.MethodDeclaration).body;
+
+                    console.log("!!!", methodDeclaration.getFullText());
+                }
+                break;
+        }
+
+        // traverse the ast
+        ts.forEachChild(node, findRemotes);
+    }
 }

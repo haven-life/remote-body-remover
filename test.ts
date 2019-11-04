@@ -1,5 +1,5 @@
-function remote(value): any {
-    return function (value) {}
+function remote(value: any): any {
+    return function (value: any) {}
 }
 
 class Person {

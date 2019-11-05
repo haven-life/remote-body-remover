@@ -31,7 +31,7 @@ compile(process.argv.slice(2), {
  * taken and modified from https://github.com/kimamula/ts-transformer-keys/blob/master/transformer.ts
  *
  * this code creates nested functions in the way that typescript expects to be able to run your actual
- * transformer function on all of your nodes when bootstrapped from `customerTransformers` compiler plugin option
+ * transformer function. this function executes for all of your nodes when bootstrapped from `customerTransformers` compiler plugin option
  *
  * @param program
  */
@@ -88,8 +88,10 @@ function visitNode(node: ts.Node, program: ts.Program): ts.Node {
                  * is an empty array.
                  */
                 return ts.updateBlock(block, []);
+            } else {
+                // we're not interested in mutating this node. return original node.
+                return node;
             }
-            break;
         default:
             // we're not interested in mutating this node. return original node.
             return node;

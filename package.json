@@ -1,12 +1,13 @@
 {
-  "name": "tester",
-  "author": "Nick Saenz",
+  "name": "@havenlife/ts-webpack-parser",
+  "version": "1.0.0",
+  "author": "Nick Saenz <nick@havenlife.com>",
   "dependencies": {
-    "typescript": "*",
+    "typescript": "3.6.*",
     "@types/node": "*"
   },
   "scripts": {
-    "testRemoteRemoval": "tsc && node remoteFunctionRemover.js ./test.ts"
+    "test": "tsc && node compile.js ./test.ts"
   },
   "engines": {
     "node": "12.13.0"

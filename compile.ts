@@ -35,7 +35,7 @@ compile(process.argv.slice(2), {
  *
  * @param program
  */
-function transformer(program: ts.Program): ts.TransformerFactory<ts.SourceFile> {
+export default function transformer(program: ts.Program): ts.TransformerFactory<ts.SourceFile> {
     return (context: ts.TransformationContext) => (file: ts.SourceFile) => visitNodeAndChildren(file, program, context);
 }
 
@@ -60,6 +60,7 @@ function visitNodeAndChildren(node: ts.Node, program: ts.Program, context: ts.Tr
  * @param program
  */
 function visitNode(node: ts.Node, program: ts.Program): ts.Node {
+    // switch because we plan on adding new conditions here in the future.
     switch (node.kind) {
         /*
          * we have a function block e.g. for function
@@ -72,10 +73,22 @@ function visitNode(node: ts.Node, program: ts.Program): ts.Node {
          */
         case ts.SyntaxKind.Block:
             /*
-             * check to see that our function block has decorators attached to its definition
-             * also verify that we have the right decorator, the remote function decorator
+             * check to see that our node is one we want to process here.
+             * requirements
+             * function block has decorators attached to its definition
+             * AND at least one of those decorators is the remote server function decorator
              */
-            if(node.parent.decorators && node.parent.decorators[0].getFullText().match('remote')) {
+            let shouldProcess = false;
+
+            if(node.parent.decorators) {
+                for (const decoratorNode of node.parent.decorators) {
+                    if(decoratorNode.getFullText().match(/remote/ && /server/)) {
+                        shouldProcess = true;
+                    }
+                }
+            }
+
+            if (shouldProcess) {
                 // we know it's a block, type it as such
                 let block = (node as ts.Block);
 
